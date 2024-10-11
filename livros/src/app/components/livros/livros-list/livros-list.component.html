@@ -1,0 +1,50 @@
+<div class="container">
+
+  <div class="row">
+    <div class="col-12">
+
+      <div class="card">
+
+        <div class="card-body">
+
+          <div class="alinharDireita">
+            <a href="admin/livros/new" class="btn btn-primary">Novo</a>
+          </div>
+
+          <table class="table table-striped" border="1" width="400px">
+            <thead>
+              <tr>
+                <th>Título</th>
+                <th>Autor</th>
+                <th>-</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (livro of lista; track $index) {
+              <tr>
+                <td>{{livro.titulo}}</td>
+                <td class="alinharDireita">{{livro.autor}}</td>
+
+                <td class="alinharDireita">
+
+                  <a class="btn btn-primary" href="admin/livros/edit/{{livro.id}}">Editar</a>
+                  <a class="btn btn-danger" (click)="deleteById(livro)" >Deletar</a>
+              
+                </td>
+
+              </tr>
+              }
+            </tbody>
+          </table>
+          
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+
+
