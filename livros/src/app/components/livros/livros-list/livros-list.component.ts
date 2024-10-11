@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Livro } from '../../../models/livro';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-livros-list',
@@ -28,15 +29,20 @@ export class LivrosListComponent {
 
   deleteById(livro: Livro){
 
-    if( confirm('Você tem certeza que deseja deletar o livro '+livro.titulo+'?') ){
-      //VOU PARA O BACK PARA EFETIVAR O DELETE
 
+    Swal.fire({
+      title: "Tem certeza que deseja deletar o livro "+livro.titulo+"?",
+      showCancelButton: true,
+      confirmButtonText: "Sim",
+      cancelButtonText: `Cancelar`
+    }).then((result) => {
+      if (result.isConfirmed) {
+        let indice = this.lista.findIndex(x => {return x.id == livro.id});
+        this.lista.splice(indice,1);
+        Swal.fire("Deletado com sucesso!", "", "success");
+      }
+    });
 
-      //NÃO ´RECISA DISSO QUANDO TIVER BACK....
-      let indice = this.lista.findIndex(x => {return x.id == livro.id});
-      this.lista.splice(indice,1);
-      
-    } 
 
   }
 

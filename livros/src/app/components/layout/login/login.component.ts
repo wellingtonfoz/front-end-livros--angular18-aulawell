@@ -18,20 +18,32 @@ export class LoginComponent {
   router = inject(Router); //equivalente ao @Autowired.... traz uma instância única do roteador para o componente
 
   autenticar() {
-    if (this.login.username == 'admin' && this.login.senha == 'admin') {
-      Swal.fire({
-        title: 'Good job!',
-        text: 'Logado com sucesso!',
-        icon: 'success',
-      });
 
+    const Toast = Swal.mixin({
+      toast: true,
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.onmouseenter = Swal.stopTimer;
+        toast.onmouseleave = Swal.resumeTimer;
+      }
+    });
+   
+
+
+    if (this.login.username == 'admin' && this.login.senha == 'admin') {
+      Toast.fire({
+        icon: "success",
+        title: "Você logou com sucesso!"
+      });
       this.router.navigate(['admin/dashboard']);
     } else
-      Swal.fire({
-        title: 'Error!',
-        text: 'Usuário ou senha incorretos',
-        icon: 'error',
-        confirmButtonText: 'Cool',
-      });
+    Toast.fire({
+      icon: "error",
+      title: "Usuário ou senha incorretos!"
+    });
   }
+  
 }

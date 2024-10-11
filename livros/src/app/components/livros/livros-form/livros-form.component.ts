@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
 import { Livro } from '../../../models/livro';
 import { ActivatedRoute, Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-livros-form',
@@ -13,6 +14,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class LivrosFormComponent {
 
+  tituloComponente: string = "Novo livro";
+
   livro: Livro = new Livro(0,'','');
 
   router = inject(Router);
@@ -21,6 +24,7 @@ export class LivrosFormComponent {
   constructor(){
     let id = this.rotaAtivade.snapshot.params['id'];
     if(id > 0){
+      this.tituloComponente = "Editar livro";   
       this.findById(id);
     }
   }
@@ -37,11 +41,14 @@ export class LivrosFormComponent {
 
 
   save(){
-    console.log(this.livro);
+    
+    Swal.fire({
+      title: "Livro salvo com sucesso!",
+      icon: "success"
+    }).then(() => {
+      this.router.navigate(['admin/livros']);
+    });
 
-    // REQUISIÇÃO PRO BACK PARA SALVAR
-    alert('Livro salvo com sucesso!');
-    this.router.navigate(['admin/livros']);
 
   }
 
