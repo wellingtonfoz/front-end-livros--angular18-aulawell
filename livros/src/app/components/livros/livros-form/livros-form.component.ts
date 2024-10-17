@@ -4,6 +4,7 @@ import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
 import { Livro } from '../../../models/livro';
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { LivrosService } from '../../../services/livros.service';
 
 @Component({
   selector: 'app-livros-form',
@@ -17,13 +18,17 @@ export class LivrosFormComponent {
   tituloComponente: string = "Novo livro";
 
   livro: Livro = new Livro(0,'','');
+  //modoNovo: boolean = true;
 
   router = inject(Router);
-  rotaAtivade = inject(ActivatedRoute);
+  rotaAtivada = inject(ActivatedRoute);
+
+  livrosService = inject(LivrosService);
 
   constructor(){
-    let id = this.rotaAtivade.snapshot.params['id'];
+    let id = this.rotaAtivada.snapshot.params['id'];
     if(id > 0){
+      //this.modoNovo = false; //
       this.tituloComponente = "Editar livro";   
       this.findById(id);
     }
@@ -31,25 +36,55 @@ export class LivrosFormComponent {
 
 
   findById(id: number){
-    //VAI PARA O BACK
-
-    let aux = new Livro(4,'aaaa','bbbb');
-    this.livro = aux;
+    
+    this.livrosService.findById(id).subscribe({
+      next: liv => {
+        this.livro = liv;
+      },
+      error: erro => {
+        alert('Deu erro');
+      }
+    })
 
   }
 
 
 
   save(){
-    
-    Swal.fire({
-      title: "Livro salvo com sucesso!",
-      icon: "success"
-    }).then(() => {
-      this.router.navigate(['admin/livros']);
+
+    this.livrosService.save(this.livro).subscribe({
+      next: mensagem => {
+        Swal.fire({
+          title: mensagem,
+          icon: "success"
+        }).then(() => {
+          this.router.navigate(['admin/livros']);
+        });
+      },
+      error: erro => {
+        alert('Deu erro');
+      }
     });
 
 
+  }
+
+  update(){
+
+
+    this.livrosService.update(this.livro).subscribe({
+      next: mensagem =>{
+        Swal.fire({
+          title: mensagem,
+          icon: "success"
+        }).then(() => {
+          this.router.navigate(['admin/livros']);
+        });
+      },
+      error: erro =>{
+        alert('Deu erro');
+      }
+    });
   }
 
 

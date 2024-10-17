@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Livro } from '../../../models/livro';
 import Swal from 'sweetalert2';
+import { LivrosService } from '../../../services/livros.service';
 
 @Component({
   selector: 'app-livros-list',
@@ -13,17 +14,22 @@ export class LivrosListComponent {
 
   lista: Livro[] = [];
 
+  livrosService = inject(LivrosService);
+
   constructor(){
     this.findAll();
   }
 
   findAll(){
-    //DEPOIS... ISSO VAI CHAMAR UM LIVROS-SERVICE QEU VAI CHAMAR O BACK
-
-    this.lista.push(new Livro(1,'AAA', 'Joãozinho'));
-    this.lista.push(new Livro(2,'BBB', 'Joãozinho'));
-    this.lista.push(new Livro(3,'CCC', 'Joãozinho'));
-    this.lista.push(new Livro(4,'DDD', 'Joãozinho'));
+  
+   this.livrosService.findAll().subscribe({
+      next: list =>{ //EQUIVALENTE AO TRY CONCLUÍDO NO BACK
+        this.lista = list;
+      },
+      error: erro => { //EQUIVALENTE AO RETORNO DE ERRO DO BACK... CATCH OU EXCEPTION
+        alert('Deu erro');
+      }
+    })
 
   }
 
@@ -37,9 +43,18 @@ export class LivrosListComponent {
       cancelButtonText: `Cancelar`
     }).then((result) => {
       if (result.isConfirmed) {
-        let indice = this.lista.findIndex(x => {return x.id == livro.id});
-        this.lista.splice(indice,1);
-        Swal.fire("Deletado com sucesso!", "", "success");
+
+        
+        this.livrosService.delete(livro.id).subscribe({
+          next: mensagem =>{
+            Swal.fire(mensagem, "", "success");
+            this.findAll();
+          },
+          error: erro => {
+            alert('Deu erro');
+          }
+        })
+
       }
     });
 
