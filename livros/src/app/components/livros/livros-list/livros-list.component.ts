@@ -2,15 +2,18 @@ import { Component, inject } from '@angular/core';
 import { Livro } from '../../../models/livro';
 import Swal from 'sweetalert2';
 import { LivrosService } from '../../../services/livros.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-livros-list',
   standalone: true,
-  imports: [],
+  imports: [FormsModule],
   templateUrl: './livros-list.component.html',
   styleUrl: './livros-list.component.scss'
 })
 export class LivrosListComponent {
+
+  pesquisa: string = "";
 
   lista: Livro[] = [];
 
@@ -18,6 +21,17 @@ export class LivrosListComponent {
 
   constructor(){
     this.findAll();
+  }
+
+  findByTitulo(){
+    this.livrosService.findByTitulo(this.pesquisa).subscribe({
+      next: lista => {
+        this.lista = lista;
+      },
+      error: erro =>{
+        alert('Deu erro');
+      }
+    })
   }
 
   findAll(){

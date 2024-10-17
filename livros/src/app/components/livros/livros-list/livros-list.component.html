@@ -5,9 +5,29 @@
         <div class="card-body">
           <h5 class="card-title">Listagem de livros</h5>
 
-          <div class="alinharDireita">
-            <a href="admin/livros/new" class="btn btn-primary">Novo</a>
+          <div class="row">
+            <div class="col-4">
+
+              <div class="input-group">
+                <input (keyup.enter)="findByTitulo()" [(ngModel)]="pesquisa" type="text" class="form-control" placeholder="Parte do título..."
+                  aria-label="Recipient's username with two button addons" />
+                <button (click)="findByTitulo()" class="btn btn-outline-primary" type="button" mdbRipple rippleColor="danger" >
+                  Pesquisar
+                </button>
+                <button (click)="findAll()" class="btn btn-outline-primary" type="button" mdbRipple rippleColor="danger" >
+                  Todos
+                </button>
+              </div>
+
+            </div>
+            <div class="col-8">
+
+              <div class="alinharDireita">
+                <a href="admin/livros/new" class="btn btn-primary">Novo</a>
+              </div>
+            </div>
           </div>
+         
 
           <table class="table table-striped" border="1" width="400px">
             <thead>

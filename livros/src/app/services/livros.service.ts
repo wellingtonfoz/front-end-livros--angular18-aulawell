@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Livro } from '../models/livro';
 import { Observable } from 'rxjs';
@@ -13,6 +13,11 @@ export class LivrosService {
   API = "http://localhost:8080/api/livro"; //começo do endpoint pra chegar na controller
 
   constructor() { }
+
+  findByTitulo(pesquisa: string): Observable<Livro[]>{
+    let abc = new HttpParams().set('nome', pesquisa);
+    return this.http.get<Livro[]>(this.API+"/findByTitulo", {params: abc})
+  }
 
   findAll(): Observable<Livro[]>  {
     return this.http.get<Livro[]>(this.API+"/findAll");
