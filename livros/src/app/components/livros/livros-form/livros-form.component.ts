@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
 import { Livro } from '../../../models/livro';
@@ -17,7 +17,8 @@ export class LivrosFormComponent {
 
   tituloComponente: string = "Novo livro";
 
-  livro: Livro = new Livro(0,'','');
+  @Input() livro: Livro = new Livro(0,'','');
+  @Output() retorno = new EventEmitter();
   //modoNovo: boolean = true;
 
   router = inject(Router);
@@ -54,12 +55,9 @@ export class LivrosFormComponent {
 
     this.livrosService.save(this.livro).subscribe({
       next: mensagem => {
-        Swal.fire({
-          title: mensagem,
-          icon: "success"
-        }).then(() => {
-          this.router.navigate(['admin/livros']);
-        });
+
+        this.retorno.emit(mensagem);
+
       },
       error: erro => {
         alert('Deu erro');
@@ -74,12 +72,9 @@ export class LivrosFormComponent {
 
     this.livrosService.update(this.livro).subscribe({
       next: mensagem =>{
-        Swal.fire({
-          title: mensagem,
-          icon: "success"
-        }).then(() => {
-          this.router.navigate(['admin/livros']);
-        });
+        
+        this.retorno.emit(mensagem);
+
       },
       error: erro =>{
         alert('Deu erro');

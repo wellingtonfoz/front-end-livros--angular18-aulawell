@@ -23,6 +23,7 @@
             <div class="col-8">
 
               <div class="alinharDireita">
+                <a (click)="novo()" class="btn btn-primary">Novo (Modal)</a>
                 <a href="admin/livros/new" class="btn btn-primary">Novo</a>
               </div>
             </div>
@@ -44,6 +45,14 @@
                 <td class="alinharDireita">{{ livro.autor }}</td>
 
                 <td class="alinharDireita">
+
+                  <a
+                  class="btn btn-primary"
+                  (click)="editar(livro)"
+                  >Editar (Modal)</a
+                >
+
+
                   <a
                     class="btn btn-primary"
                     href="admin/livros/edit/{{ livro.id }}"
@@ -66,3 +75,25 @@
     </div>
   </div>
 </div>
+
+
+
+<ng-template #modalLivrosForm>
+
+  <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modalRef.close()"
+    ></button>
+  </div>
+  <div class="modal-body">
+    
+    <app-livros-form [livro]="livroEdit" (retorno)="retornoForm($event)"></app-livros-form>
+
+  </div>
+  
+
+</ng-template>
