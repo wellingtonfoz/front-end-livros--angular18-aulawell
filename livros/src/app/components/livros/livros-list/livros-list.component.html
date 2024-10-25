@@ -23,8 +23,8 @@
             <div class="col-8">
 
               <div class="alinharDireita">
-                <a (click)="novo()" class="btn btn-primary">Novo (Modal)</a>
-                <a href="admin/livros/new" class="btn btn-primary">Novo</a>
+                <a (click)="novo()" class="btn btn-primary">Novo</a>
+              <!--  <a href="admin/livros/new" class="btn btn-primary">Novo</a>-->
               </div>
             </div>
           </div>
@@ -34,7 +34,6 @@
             <thead>
               <tr>
                 <th>Título</th>
-                <th>Autor</th>
                 <th>-</th>
               </tr>
             </thead>
@@ -42,22 +41,22 @@
               @for (livro of lista; track $index) {
               <tr>
                 <td>{{ livro.titulo }}</td>
-                <td class="alinharDireita">{{ livro.autor }}</td>
 
                 <td class="alinharDireita">
 
                   <a
                   class="btn btn-primary"
                   (click)="editar(livro)"
-                  >Editar (Modal)</a
+                  >Editar</a
                 >
 
-
+<!--
                   <a
                     class="btn btn-primary"
                     href="admin/livros/edit/{{ livro.id }}"
                     >Editar</a
                   >
+                  -->
                   <a class="btn btn-danger" (click)="deleteById(livro)"
                     >Deletar</a
                   >

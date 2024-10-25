@@ -1,13 +1,11 @@
+import { Autor } from "./autor";
+import { Biblioteca } from "./biblioteca";
+
 export class Livro {
 
     id!: number;
     titulo!: string;
-    autor!: string;
+    biblioteca!: Biblioteca;
+    autores!: Autor[];
 
-    constructor(id: number, titulo: string, autor: string){
-        this.id = id;
-        this.titulo = titulo;
-        this.autor = autor;
-    }
-    
 }

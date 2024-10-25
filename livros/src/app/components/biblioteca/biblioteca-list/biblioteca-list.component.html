@@ -1,0 +1,98 @@
+<div class="container">
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Listagem de Bibliotecas</h5>
+  
+            <div class="row">
+              <div class="col-4">
+  
+                <div class="input-group">
+                  <input (keyup.enter)="findByNome()" [(ngModel)]="pesquisa" type="text" class="form-control" placeholder="Parte do nome..."
+                    aria-label="Recipient's username with two button addons" />
+                  <button (click)="findByNome()" class="btn btn-outline-primary" type="button" mdbRipple rippleColor="danger" >
+                    Pesquisar
+                  </button>
+                  <button (click)="findAll()" class="btn btn-outline-primary" type="button" mdbRipple rippleColor="danger" >
+                    Todos
+                  </button>
+                </div>
+  
+              </div>
+              <div class="col-8">
+  
+                <div class="alinharDireita">
+                  <a (click)="novo()" class="btn btn-primary">Novo</a>
+             <!--     <a href="admin/bibliotecas/new" class="btn btn-primary">Novo</a>-->
+                </div>
+              </div>
+            </div>
+           
+  
+            <table class="table table-striped" border="1" width="400px">
+              <thead>
+                <tr>
+                  <th>Título</th>
+                  <th>-</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (biblioteca of lista; track $index) {
+                <tr>
+                  <td>{{ biblioteca.nome }}</td>
+  
+                  <td class="alinharDireita">
+  
+                    <a
+                    class="btn btn-primary"
+                    (click)="editar(biblioteca)"
+                    >Editar</a
+                  >
+  
+  <!-- 
+                    <a
+                      class="btn btn-primary"
+                      href="admin/bibliotecas/edit/{{ biblioteca.id }}"
+                      >Editar</a
+                    >
+                    -->
+                    <a class="btn btn-danger" (click)="deleteById(biblioteca)"
+                      >Deletar</a
+                    >
+                  </td>
+                </tr>
+                }
+              </tbody>
+            </table>
+  
+            <h5 class="card-title">Exibindo {{lista.length}} bibliotecas</h5>
+  
+  
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  
+  
+  <ng-template #modalBibliotecasForm>
+  
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+      <button
+        type="button"
+        class="btn-close"
+        aria-label="Close"
+        (click)="modalRef.close()"
+      ></button>
+    </div>
+    <div class="modal-body">
+      
+      <app-bibliotecas-form [biblioteca]="bibliotecaEdit" (retorno)="retornoForm($event)"></app-bibliotecas-form>
+  
+    </div>
+    
+  
+  </ng-template>

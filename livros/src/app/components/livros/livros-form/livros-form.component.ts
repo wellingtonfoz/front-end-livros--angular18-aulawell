@@ -1,23 +1,34 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output, TemplateRef, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
 import { Livro } from '../../../models/livro';
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { LivrosService } from '../../../services/livros.service';
+import { AutoresListComponent } from '../../autor/autor-list/autor-list.component';
+import { MdbModalRef, MdbModalService } from 'mdb-angular-ui-kit/modal';
+import { Autor } from '../../../models/autor';
 
 @Component({
   selector: 'app-livros-form',
   standalone: true,
-  imports: [MdbFormsModule, FormsModule],
+  imports: [MdbFormsModule, FormsModule, AutoresListComponent],
   templateUrl: './livros-form.component.html',
   styleUrl: './livros-form.component.scss'
 })
 export class LivrosFormComponent {
 
+  modalService = inject(MdbModalService); // ABRE MODAIS
+  @ViewChild('modalAutorList') modalAutorList!: TemplateRef<any>; //enxergar o template da modal q tá no html
+  modalRef!: MdbModalRef<any>; //a referÊncia da modal aberta para ser fechada
+
+
   tituloComponente: string = "Novo livro";
 
-  @Input() livro: Livro = new Livro(0,'','');
+  @Input() livro: Livro = new Livro();
+  autores: Autor[] = [];
+
+  
   @Output() retorno = new EventEmitter();
   //modoNovo: boolean = true;
 
@@ -82,5 +93,23 @@ export class LivrosFormComponent {
     });
   }
 
+
+  abrirModal(){
+    this.modalRef =   this.modalService.open(this.modalAutorList, {modalClass:'modal-lg'});
+  }
+
+  autorSelecionado(autor: Autor){
+    if(this.livro.autores == null)
+      this.livro.autores = [];
+
+    this.livro.autores.push(autor);
+
+    this.modalRef.close();
+  }
+
+  removerAutor(autor: Autor){
+    let indice = this.livro.autores.findIndex( (aut) => {return aut.id == autor.id } );
+    this.livro.autores.splice(indice,1);
+  }
 
 }

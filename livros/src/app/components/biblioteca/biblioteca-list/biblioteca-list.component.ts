@@ -1,41 +1,41 @@
 import { Component, inject, TemplateRef, ViewChild } from '@angular/core';
-import { Livro } from '../../../models/livro';
+import { Biblioteca } from '../../../models/biblioteca';
 import Swal from 'sweetalert2';
-import { LivrosService } from '../../../services/livros.service';
+import { BibliotecaService } from '../../../services/biblioteca.service';
 import { FormsModule } from '@angular/forms';
 import {
   MdbModalModule,
   MdbModalRef,
   MdbModalService,
 } from 'mdb-angular-ui-kit/modal';
-import { LivrosFormComponent } from '../livros-form/livros-form.component';
+import { BibliotecaFormComponent } from '../biblioteca-form/biblioteca-form.component';
 
 @Component({
-  selector: 'app-livros-list',
+  selector: 'app-bibliotecas-list',
   standalone: true,
-  imports: [FormsModule, MdbModalModule, LivrosFormComponent],
-  templateUrl: './livros-list.component.html',
-  styleUrl: './livros-list.component.scss',
+  imports: [FormsModule, MdbModalModule, BibliotecaFormComponent],
+  templateUrl: './biblioteca-list.component.html',
+  styleUrl: './biblioteca-list.component.scss',
 })
-export class LivrosListComponent {
+export class BibliotecaListComponent {
   modalService = inject(MdbModalService); // ABRE MODAIS
-  @ViewChild('modalLivrosForm') modalLivrosForm!: TemplateRef<any>; //enxergar o template da modal q tá no html
+  @ViewChild('modalBibliotecasForm') modalBibliotecasForm!: TemplateRef<any>; //enxergar o template da modal q tá no html
   modalRef!: MdbModalRef<any>; //a referÊncia da modal aberta para ser fechada
 
-  livroEdit!: Livro; //esse objeto será utilizado para transportar o livro clicado no botão editar
+  bibliotecaEdit!: Biblioteca; //esse objeto será utilizado para transportar o biblioteca clicado no botão editar
 
   pesquisa: string = '';
 
-  lista: Livro[] = [];
+  lista: Biblioteca[] = [];
 
-  livrosService = inject(LivrosService);
+  bibliotecasService = inject(BibliotecaService);
 
   constructor() {
     this.findAll();
   }
 
-  findByTitulo() {
-    this.livrosService.findByTitulo(this.pesquisa).subscribe({
+  findByNome() {
+    this.bibliotecasService.findByNome(this.pesquisa).subscribe({
       next: (lista) => {
         this.lista = lista;
       },
@@ -46,7 +46,7 @@ export class LivrosListComponent {
   }
 
   findAll() {
-    this.livrosService.findAll().subscribe({
+    this.bibliotecasService.findAll().subscribe({
       next: (list) => {
         //EQUIVALENTE AO TRY CONCLUÍDO NO BACK
         this.lista = list;
@@ -58,15 +58,15 @@ export class LivrosListComponent {
     });
   }
 
-  deleteById(livro: Livro) {
+  deleteById(biblioteca: Biblioteca) {
     Swal.fire({
-      title: 'Tem certeza que deseja deletar o livro ' + livro.titulo + '?',
+      title: 'Tem certeza que deseja deletar o biblioteca ' + biblioteca.nome + '?',
       showCancelButton: true,
       confirmButtonText: 'Sim',
       cancelButtonText: `Cancelar`,
     }).then((result) => {
       if (result.isConfirmed) {
-        this.livrosService.delete(livro.id).subscribe({
+        this.bibliotecasService.delete(biblioteca.id).subscribe({
           next: (mensagem) => {
             Swal.fire(mensagem, '', 'success');
             this.findAll();
@@ -80,14 +80,14 @@ export class LivrosListComponent {
   }
 
   novo() {
-    this.livroEdit = new Livro();
-    this.modalRef = this.modalService.open(this.modalLivrosForm);
+    this.bibliotecaEdit = new Biblioteca();
+    this.modalRef = this.modalService.open(this.modalBibliotecasForm);
   }
 
-  editar(livro: Livro) {
-    //this.livroEdit = livro;
-    this.livroEdit = Object.assign({}, livro); //CLONE DO OBJETO
-    this.modalRef = this.modalService.open(this.modalLivrosForm);
+  editar(biblioteca: Biblioteca) {
+    //this.bibliotecaEdit = biblioteca;
+    this.bibliotecaEdit = Object.assign({}, biblioteca); //CLONE DO OBJETO
+    this.modalRef = this.modalService.open(this.modalBibliotecasForm);
   }
 
   retornoForm(mensagem: string) {

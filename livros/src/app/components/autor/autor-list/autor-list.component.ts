@@ -1,41 +1,45 @@
-import { Component, inject, TemplateRef, ViewChild } from '@angular/core';
-import { Livro } from '../../../models/livro';
+import { Component, EventEmitter, inject, Input, Output, TemplateRef, ViewChild } from '@angular/core';
+import { Autor } from '../../../models/autor';
 import Swal from 'sweetalert2';
-import { LivrosService } from '../../../services/livros.service';
+import { AutorService } from '../../../services/autor.service';
 import { FormsModule } from '@angular/forms';
 import {
   MdbModalModule,
   MdbModalRef,
   MdbModalService,
 } from 'mdb-angular-ui-kit/modal';
-import { LivrosFormComponent } from '../livros-form/livros-form.component';
+import { AutorFormComponent } from '../autor-form/autor-form.component';
 
 @Component({
-  selector: 'app-livros-list',
+  selector: 'app-autores-list',
   standalone: true,
-  imports: [FormsModule, MdbModalModule, LivrosFormComponent],
-  templateUrl: './livros-list.component.html',
-  styleUrl: './livros-list.component.scss',
+  imports: [FormsModule, MdbModalModule, AutorFormComponent],
+  templateUrl: './autor-list.component.html',
+  styleUrl: './autor-list.component.scss',
 })
-export class LivrosListComponent {
+export class AutoresListComponent {
+
+  @Input() modoAssociacao: boolean = false;
+  @Output() retorno = new EventEmitter<any>();
+
   modalService = inject(MdbModalService); // ABRE MODAIS
-  @ViewChild('modalLivrosForm') modalLivrosForm!: TemplateRef<any>; //enxergar o template da modal q tá no html
+  @ViewChild('modalAutoresForm') modalAutoresForm!: TemplateRef<any>; //enxergar o template da modal q tá no html
   modalRef!: MdbModalRef<any>; //a referÊncia da modal aberta para ser fechada
 
-  livroEdit!: Livro; //esse objeto será utilizado para transportar o livro clicado no botão editar
+  autorEdit!: Autor; //esse objeto será utilizado para transportar o autor clicado no botão editar
 
   pesquisa: string = '';
 
-  lista: Livro[] = [];
+  lista: Autor[] = [];
 
-  livrosService = inject(LivrosService);
+  autoresService = inject(AutorService);
 
   constructor() {
     this.findAll();
   }
 
-  findByTitulo() {
-    this.livrosService.findByTitulo(this.pesquisa).subscribe({
+  findByNome() {
+    this.autoresService.findByNome(this.pesquisa).subscribe({
       next: (lista) => {
         this.lista = lista;
       },
@@ -46,7 +50,7 @@ export class LivrosListComponent {
   }
 
   findAll() {
-    this.livrosService.findAll().subscribe({
+    this.autoresService.findAll().subscribe({
       next: (list) => {
         //EQUIVALENTE AO TRY CONCLUÍDO NO BACK
         this.lista = list;
@@ -58,15 +62,15 @@ export class LivrosListComponent {
     });
   }
 
-  deleteById(livro: Livro) {
+  deleteById(autor: Autor) {
     Swal.fire({
-      title: 'Tem certeza que deseja deletar o livro ' + livro.titulo + '?',
+      title: 'Tem certeza que deseja deletar o autor ' + autor.nome + '?',
       showCancelButton: true,
       confirmButtonText: 'Sim',
       cancelButtonText: `Cancelar`,
     }).then((result) => {
       if (result.isConfirmed) {
-        this.livrosService.delete(livro.id).subscribe({
+        this.autoresService.delete(autor.id).subscribe({
           next: (mensagem) => {
             Swal.fire(mensagem, '', 'success');
             this.findAll();
@@ -80,14 +84,14 @@ export class LivrosListComponent {
   }
 
   novo() {
-    this.livroEdit = new Livro();
-    this.modalRef = this.modalService.open(this.modalLivrosForm);
+    this.autorEdit = new Autor();
+    this.modalRef = this.modalService.open(this.modalAutoresForm);
   }
 
-  editar(livro: Livro) {
-    //this.livroEdit = livro;
-    this.livroEdit = Object.assign({}, livro); //CLONE DO OBJETO
-    this.modalRef = this.modalService.open(this.modalLivrosForm);
+  editar(autor: Autor) {
+    //this.autorEdit = autor;
+    this.autorEdit = Object.assign({}, autor); //CLONE DO OBJETO
+    this.modalRef = this.modalService.open(this.modalAutoresForm);
   }
 
   retornoForm(mensagem: string) {
@@ -102,4 +106,11 @@ export class LivrosListComponent {
 
     this.findAll(); //RECARREGO A LISTA (NUNCA UTILZIEM RELOAD OU REFRESH DA PÁGINA INTEIRA)
   }
+
+
+  selecionar(autor: Autor){
+    //EMITIR UM EVENTO PARA ENVIAR O AUTOR SELECIONADO PARA A MODAL DE TRÁS
+    this.retorno.emit(autor);
+  }
+
 }
