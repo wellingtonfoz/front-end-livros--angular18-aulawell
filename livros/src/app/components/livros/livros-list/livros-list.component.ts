@@ -81,13 +81,13 @@ export class LivrosListComponent {
 
   novo() {
     this.livroEdit = new Livro();
-    this.modalRef = this.modalService.open(this.modalLivrosForm);
+    this.modalRef = this.modalService.open(this.modalLivrosForm, {modalClass: "modal-lg"});
   }
 
   editar(livro: Livro) {
     //this.livroEdit = livro;
     this.livroEdit = Object.assign({}, livro); //CLONE DO OBJETO
-    this.modalRef = this.modalService.open(this.modalLivrosForm);
+    this.modalRef = this.modalService.open(this.modalLivrosForm,  {modalClass: "modal-lg"});
   }
 
   retornoForm(mensagem: string) {

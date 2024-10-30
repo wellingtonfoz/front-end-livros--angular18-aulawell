@@ -6,25 +6,27 @@
             <h5 class="card-title">Listagem de Bibliotecas</h5>
   
             <div class="row">
-              <div class="col-4">
+              <div class="col-6">
   
                 <div class="input-group">
                   <input (keyup.enter)="findByNome()" [(ngModel)]="pesquisa" type="text" class="form-control" placeholder="Parte do nome..."
                     aria-label="Recipient's username with two button addons" />
-                  <button (click)="findByNome()" class="btn btn-outline-primary" type="button" mdbRipple rippleColor="danger" >
+                  <button (click)="findByNome()" class="btn-rounded btn btn-outline-primary" type="button" mdbRipple rippleColor="danger" >
                     Pesquisar
                   </button>
-                  <button (click)="findAll()" class="btn btn-outline-primary" type="button" mdbRipple rippleColor="danger" >
+                  <button (click)="findAll()" class="btn-rounded btn btn-outline-primary" type="button" mdbRipple rippleColor="danger" >
                     Todos
                   </button>
                 </div>
   
               </div>
-              <div class="col-8">
+              <div class="col-6">
   
                 <div class="alinharDireita">
-                  <a (click)="novo()" class="btn btn-primary">Novo</a>
-             <!--     <a href="admin/bibliotecas/new" class="btn btn-primary">Novo</a>-->
+                  @if(!modoAssociacao){
+                    <a (click)="novo()" class="btn-rounded btn btn-primary">Novo</a>
+              <!--     <a href="admin/bibliotecas/new" class="btn-rounded btn btn-primary">Novo</a>-->
+                  }@else{<br>}
                 </div>
               </div>
             </div>
@@ -44,22 +46,18 @@
   
                   <td class="alinharDireita">
   
+                    @if(!modoAssociacao){
                     <a
-                    class="btn btn-primary"
+                    class="btn-rounded btn btn-primary"
                     (click)="editar(biblioteca)"
-                    >Editar</a
-                  >
-  
-  <!-- 
-                    <a
-                      class="btn btn-primary"
-                      href="admin/bibliotecas/edit/{{ biblioteca.id }}"
-                      >Editar</a
-                    >
-                    -->
-                    <a class="btn btn-danger" (click)="deleteById(biblioteca)"
-                      >Deletar</a
-                    >
+                    >Editar</a>
+
+                    <a class="btn-rounded btn btn-danger" (click)="deleteById(biblioteca)"
+                      >Deletar</a>
+                    }@else{
+                      <a class="btn-rounded btn btn-success" (click)="selecionar(biblioteca)"
+                      >Selecionar</a>
+                    }
                   </td>
                 </tr>
                 }
@@ -79,8 +77,8 @@
   
   <ng-template #modalBibliotecasForm>
   
-    <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+    <div class="modal-header bg-primary text-white">
+      <h5 class="modal-title" id="exampleModalLabel">Cadastro de bibliotecas</h5>
       <button
         type="button"
         class="btn-close"

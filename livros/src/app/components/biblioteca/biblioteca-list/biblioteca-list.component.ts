@@ -1,4 +1,4 @@
-import { Component, inject, TemplateRef, ViewChild } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output, TemplateRef, ViewChild } from '@angular/core';
 import { Biblioteca } from '../../../models/biblioteca';
 import Swal from 'sweetalert2';
 import { BibliotecaService } from '../../../services/biblioteca.service';
@@ -29,6 +29,11 @@ export class BibliotecaListComponent {
   lista: Biblioteca[] = [];
 
   bibliotecasService = inject(BibliotecaService);
+
+  @Input() modoAssociacao: boolean = false;
+  @Output() retorno = new EventEmitter();
+
+
 
   constructor() {
     this.findAll();
@@ -101,5 +106,11 @@ export class BibliotecaListComponent {
     });
 
     this.findAll(); //RECARREGO A LISTA (NUNCA UTILZIEM RELOAD OU REFRESH DA PÁGINA INTEIRA)
+  }
+
+
+  selecionar(biblioteca: Biblioteca){
+    //EMITIR UM EVENTO PARA ENVIAR O AUTOR SELECIONADO PARA A MODAL DE TRÁS
+    this.retorno.emit(biblioteca);
   }
 }

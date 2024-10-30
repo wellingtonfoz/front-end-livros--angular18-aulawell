@@ -15,7 +15,7 @@ import { BibliotecaService } from '../../../services/biblioteca.service';
 })
 export class BibliotecaFormComponent {
 
-  tituloComponente: string = "Novo biblioteca";
+  tituloComponente: string = "Nova biblioteca";
 
   @Input() biblioteca: Biblioteca = new Biblioteca();
   @Output() retorno = new EventEmitter();
