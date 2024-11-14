@@ -4,6 +4,7 @@ import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
 import { Login } from '../../../models/login';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { LoginService } from '../../../auth/login.service';
 
 @Component({
   selector: 'app-login',
@@ -15,7 +16,14 @@ import Swal from 'sweetalert2';
 export class LoginComponent {
   login: Login = new Login();
 
+  loginService = inject(LoginService);
+
   router = inject(Router); //equivalente ao @Autowired.... traz uma instância única do roteador para o componente
+
+
+  constructor(){
+    this.loginService.removerToken();
+  }
 
   autenticar() {
 
@@ -33,17 +41,21 @@ export class LoginComponent {
    
 
 
-    if (this.login.username == 'admin' && this.login.senha == 'admin') {
-      Toast.fire({
-        icon: "success",
-        title: "Você logou com sucesso!"
-      });
-      this.router.navigate(['admin/dashboard']);
-    } else
-    Toast.fire({
-      icon: "error",
-      title: "Usuário ou senha incorretos!"
-    });
+    this.loginService.logar(this.login).subscribe({
+      next: token => {
+        this.loginService.addToken(token);
+        this.router.navigate(['admin/dashboard']);
+      },
+      error: erro => {
+        Toast.fire({
+          icon: "error",
+          title: "Usuário ou senha incorretos!"
+        });
+      }
+    })
+
+   
+    
   }
   
 }
