@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Livro } from '../models/livro';
 import { Observable } from 'rxjs';
+import { Page } from '../models/page';
 
 @Injectable({
   providedIn: 'root'
@@ -14,13 +15,13 @@ export class LivrosService {
 
   constructor() { }
 
-  findByTitulo(pesquisa: string): Observable<Livro[]>{
+  findByTitulo(pesquisa: string, pagina: number): Observable<Page>{
     let abc = new HttpParams().set('nome', pesquisa);
-    return this.http.get<Livro[]>(this.API+"/findByTitulo", {params: abc})
+    return this.http.get<Page>(this.API+"/findByTitulo/"+pagina, {params: abc})
   }
 
-  findAll(): Observable<Livro[]>  {
-    return this.http.get<Livro[]>(this.API+"/findAll");
+  findAll(pagina: number): Observable<Page>  {
+    return this.http.get<Page>(this.API+"/findAll/"+pagina);
   }
 
   findById(id: number): Observable<Livro>{

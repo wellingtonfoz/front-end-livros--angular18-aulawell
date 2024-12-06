@@ -14,6 +14,7 @@ export const routes: Routes = [
         {path: "dashboard", component: DashboardComponent},
 
         {path: "livros", component: LivrosListComponent},
+        {path: "livros/:page", component: LivrosListComponent},
         {path: "livros/new", component: LivrosFormComponent},
         {path: "livros/edit/:id", component: LivrosFormComponent},
 

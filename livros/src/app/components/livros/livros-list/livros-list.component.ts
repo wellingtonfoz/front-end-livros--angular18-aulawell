@@ -9,11 +9,14 @@ import {
   MdbModalService,
 } from 'mdb-angular-ui-kit/modal';
 import { LivrosFormComponent } from '../livros-form/livros-form.component';
+import { ActivatedRoute } from '@angular/router';
+import { Page } from '../../../models/page';
+import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-livros-list',
   standalone: true,
-  imports: [FormsModule, MdbModalModule, LivrosFormComponent],
+  imports: [FormsModule, MdbModalModule, LivrosFormComponent, NgbPaginationModule],
   templateUrl: './livros-list.component.html',
   styleUrl: './livros-list.component.scss',
 })
@@ -27,17 +30,27 @@ export class LivrosListComponent {
   pesquisa: string = '';
 
   lista: Livro[] = [];
+  pagina: number = 1;
+  maximo: number = 5;
+  pageObj!: Page;
 
   livrosService = inject(LivrosService);
+  router = inject(ActivatedRoute);
 
   constructor() {
-    this.findAll();
+
+    let page = this.router.snapshot.params['page'];
+    if(page){
+      this.pagina = page;
+    }
+    this.findByTitulo();
   }
 
   findByTitulo() {
-    this.livrosService.findByTitulo(this.pesquisa).subscribe({
-      next: (lista) => {
-        this.lista = lista;
+    this.livrosService.findByTitulo(this.pesquisa, this.pagina).subscribe({
+      next: (page) => {
+        this.lista = page.content;
+        this.pageObj = page;
       },
       error: (erro) => {
         alert('Deu erro');
@@ -45,18 +58,19 @@ export class LivrosListComponent {
     });
   }
 
-  findAll() {
-    this.livrosService.findAll().subscribe({
-      next: (list) => {
+  /*findAll() {
+    this.livrosService.findAll(this.pagina).subscribe({
+      next: (pagina) => {
         //EQUIVALENTE AO TRY CONCLUÍDO NO BACK
-        this.lista = list;
+        this.lista = pagina.content;
+        this.pageObj = pagina;
       },
       error: (erro) => {
         //EQUIVALENTE AO RETORNO DE ERRO DO BACK... CATCH OU EXCEPTION
         alert('Deu erro');
       },
     });
-  }
+  }*/
 
   deleteById(livro: Livro) {
     Swal.fire({
@@ -69,7 +83,7 @@ export class LivrosListComponent {
         this.livrosService.delete(livro.id).subscribe({
           next: (mensagem) => {
             Swal.fire(mensagem, '', 'success');
-            this.findAll();
+            this.findByTitulo();
           },
           error: (erro) => {
             alert('Deu erro');
@@ -100,6 +114,6 @@ export class LivrosListComponent {
       icon: 'success',
     });
 
-    this.findAll(); //RECARREGO A LISTA (NUNCA UTILZIEM RELOAD OU REFRESH DA PÁGINA INTEIRA)
+    this.findByTitulo(); //RECARREGO A LISTA (NUNCA UTILZIEM RELOAD OU REFRESH DA PÁGINA INTEIRA)
   }
 }

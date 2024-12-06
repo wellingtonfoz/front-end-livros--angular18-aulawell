@@ -2,6 +2,9 @@
 @import '@fortawesome/fontawesome-free/css/all.css';
 @import 'mdb-angular-ui-kit/assets/scss/mdb.scss';
 
+.page-item{
+    border: 1px solid #999999;
+}
 
 body{
     background-color: #dddddd;
@@ -19,3 +22,5 @@ body{
 .centralizar{
     text-align: center;
 }
+/* Importing Bootstrap SCSS file. */
+@import 'bootstrap/scss/bootstrap';
